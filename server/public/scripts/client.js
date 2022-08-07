@@ -1,5 +1,6 @@
 console.log('in client.js')
 
+//DOC READY
 $(document).ready(function (){
     console.log('JQ');
     //click listeners
@@ -7,43 +8,71 @@ $(document).ready(function (){
     //load existing to do items at page load
     getTodo();
 
-});//end doc ready
+})//end doc ready
 
-function deleteTask(){
-    console.log('in deleteTask')
-    //ajax call to server to delete tasks
-    const id = $(this).closest('tr').data('id');
-    console.log(id);
+
+//GET
+function getTodo(){
+    console.log('in getTodo');
+    //ajax call to server to get todo list
     $.ajax({
-        method: "DELETE",
-        url: `/todo/${id}`
-    }).then(function(response){
-        console.log('response',response)
-        getTodo();
-    }).catch(function(err) {
+        method: 'GET',
+        url: '/todo'
+    }).then(function (response){
+    console.log(response)
+    renderTodo(response);
+    }).catch(function(err){
         console.log(err);
-        alert('error in delete',err)
+        alert('error in get to do')
     })
-} // end delete task
+} //end GET
 
-function getClickListeners(){
-    console.log('in getClickListeners');
-    $('#addBtn').on('click',function (){
-        console.log('click addBtn');
+//POST
+function saveTask(newTask) {
+    console.log('in saveTask', newTask);
+
+    //ajax call to get tasks
+    $.ajax({
+        method: 'POST',
+        url: '/todo',
+        data: newTask
+    }).then(function(response){
+        console.log(response);
+    }).catch(function(err){
+        console.log('error in post', err);
+        alert ('unable to add task')
     })
+   
+}//end POST
 
-    let taskToAdd = {
-        task: $('#todoIn').val(),
+//render to DOM
+function renderTodo(todoArray){
+    $('#viewTodo').empty();
+    
+    for (let i=0; i < todoArray.length; i++)
+        if (todoArray[i].is_done===false){
+            console.log('in false')
+            $('#viewTodo').append(`
+            <tr data-id=${todoArray[i].id}>
+                <td>${todoArray[i].task}</td>
+                <td>${todoArray[i].is_done}</td>
+                <td><button class="completeBtn">COMPLETED</button></td>
+                <td><button id="deleteBtn">DELETE</td>
+            </tr>    
+            `)
+        } else {
+            console.log('in true', todoArray[i])
+            $('#viewTodo').append(`
+            <tr data-id=${todoArray[i].id}>
+                <td>${todoArray[i].task}</td>
+                <td>${todoArray[i].is_done},td>
+                <td><button id="deleteBtn">DELETE</td>
+            </tr>
+            `)    
+        }
+    } //end render to DOM
 
-    };
-    //call saveTask with new object
-     saveTask(taskToAdd);
-
-$('#viewTodo').on('click', '#deleteBtn', deleteTask) 
-
-$('#viewTodo').on('click', '#completeBtn', completeTask)
-}
-
+//PUT
 function completeTask(){
     console.log('in updateTask');
 
@@ -59,61 +88,43 @@ function completeTask(){
         console.log(err)
         alert ('mark complete failed')
     })
-};
+}//end PUT
 
-function getTodo(){
-    console.log('in getTodo');
-    //ajax call to server to get todo list
+//DELETE
+function deleteTask(){
+    console.log('in deleteTask')
+    //ajax call to server to delete tasks
+    const id = $(this).closest('tr').data('id');
+    console.log(id);
     $.ajax({
-        method: 'GET',
-        url: '/todo'
-    }).then(function (response){
-    console.log(response)
-    renderTodo(response);
-    }).catch(function(err){
-        console.log(err);
-        alert('error in get to do')
-    })
-} //end get to do
-
-function renderTodo(todoArray){
-$('#viewTodo').empty();
-
-for (let i=0; i < todoArray.length; i++)
-    if (todoArray[i].is_done===false){
-        console.log('in false')
-        $('#viewTodo').append(`
-        <tr data-id=${todoArray[i].id}>
-            <td>${todoArray[i].task}</td>
-            <td>${todoArray[i].is_done},td>
-            <td><button class="completeBtn">COMPLETED</button></td>
-            <td><button id="deleteBtn">DELETE</td>
-        </tr>    
-        `)
-    } else {
-        console.log('in true', todoArray[i])
-        $('#viewTodo').append(`
-        <tr data-id=${todoArray[i].id}>
-            <td>${todoArray[i].task}</td>
-            <td>${todoArray[i].is_done},td>
-            <td><button id="deleteBtn">DELETE</td>
-        </tr>
-        `)    
-    }
-}
-
-function saveTask(newTask) {
-    console.log('in saveTask', newTask);
-
-    //ajax call to get tasks
-    $.ajax({
-        method: 'POST',
-        url: '/todo',
-        data: newTask
+        method: "DELETE",
+        url: `/todo/${id}`
     }).then(function(response){
-        console.log(response);
-    }).catch(function(err){
-        console.log('error in post', err);
-        alert ('unable to add task')
+        console.log('response',response)
+        getTodo();
+    }).catch(function(err) {
+        console.log(err);
+        alert('error in delete', err)
     })
-}
+} // end DELETE
+
+//Get Click Listeners
+
+function getClickListeners(){
+    console.log('in getClickListeners');
+    $('#addBtn').on('click',function (){
+        console.log('click addBtn');
+    })
+
+    let taskToAdd = {
+        task: $('#todoIn').val(),
+        //is_complete: $('#')
+
+    };
+    //call saveTask with new object
+     saveTask(taskToAdd);
+     
+     $('#viewTodo').on('click', '#deleteBtn', deleteTask);
+     $('#viewTodo').on('click', '#completeBtn', completeTask);
+
+}//end Get Click Listeners

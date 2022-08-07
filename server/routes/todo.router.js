@@ -13,7 +13,7 @@ const pool = new Pool({
     idleTimeoutMillis: 30000
 });
 
-GET
+//GET
 todoRouter.get('/', (req, res) => {
     let queryText = 'SELECT * FROM "todo";';
 
