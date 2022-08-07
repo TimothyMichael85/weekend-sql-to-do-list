@@ -71,7 +71,7 @@ function renderTodo(todoArray){
         } else {
             console.log('in true', todoArray[i])
             $('#viewTodo').append(`
-            <tr data-id=${todoArray[i].id}>
+            <tr class="green" data-id=${todoArray[i].id}>
                 <td>${todoArray[i].task}</td>
                 <td>${todoArray[i].is_done}</td>
                 <td><button id="deleteBtn">DELETE</td>
