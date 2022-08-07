@@ -1,3 +1,17 @@
-.green{
+body {
+    text-align: center;
+    background-color:lightgrey;
+    font-family: "Monaco", "Courier New", monospace;
+}
+h1 {
+    color: lightgrey;
+    background-color: black;
+}
+
+.inputs {    
+    outline: 1px;
+}
+
+.green {
     background-color: green;
 }
