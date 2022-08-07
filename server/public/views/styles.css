@@ -13,5 +13,6 @@ h1 {
 }
 
 .green {
+    color: lightgray;
     background-color: green;
 }
