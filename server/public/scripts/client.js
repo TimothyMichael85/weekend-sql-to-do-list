@@ -28,14 +28,14 @@ function getTodo(){
 } //end GET
 
 //POST
-function saveTask(taskToAdd) {
-    console.log('in saveTask', taskToAdd);
+function saveTask() {
+    console.log('in saveTask');
 
     //ajax call to get tasks
     $.ajax({
         method: 'POST',
         url: '/todo',
-        data: taskToAdd
+        //data: taskToAdd
     }).then(function(response){
         console.log(response);
     }).catch(function(err){
@@ -118,15 +118,17 @@ function getClickListeners(){
     console.log('in getClickListeners');
     $('#addBtn').on('click',function (){
         console.log('click addBtn');
+    
+        let taskToAdd = {
+            task: $('#todoIn').val(),
+            is_done: false
+        }    
+        saveTask(taskToAdd);
+    
     })
 
-    let taskToAdd = {
-        task: $('#todoIn').val(),
-        is_complete: false
-
-    };
     //call saveTask with new object
-     saveTask(taskToAdd);
+     
      
      $('#viewTodo').on('click', '#deleteBtn', deleteTask);
      $('#viewTodo').on('click', '#completeBtn', completeTask);

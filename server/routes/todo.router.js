@@ -30,13 +30,14 @@ todoRouter.get('/', (req, res) => {
 
 //POST
 todoRouter.post('/', (req, res) => {
-    let queryText = `INSERT INTO "todo" ("task", "is_complete")
+    let queryText = `INSERT INTO "todo" ("task", "is_done")
     VALUES ($1, $2);`;
-    console.log('router post')
+    //let taskToAdd = (req.body) 
+    console.log('router post', req.body)
 
     pool.query(
         queryText,
-        [taskToAdd.task, taskToAdd.is_complete])
+        [req.body.task, req.body.is_done])
         console.log('is this thing on?')
         .then((response) => {
             console.log(response);
