@@ -19,7 +19,7 @@ function getTodo(){
         method: 'GET',
         url: '/todo'
     }).then(function (response){
-    console.log(response)
+    //console.log(response)
     renderTodo(response);
     }).catch(function(err){
         console.log(err);
@@ -28,18 +28,25 @@ function getTodo(){
 } //end GET
 
 //POST
-function saveTask() {
+function saveTask(taskToAdd) {
     console.log('in saveTask');
 
     //ajax call to get tasks
     $.ajax({
         method: 'POST',
         url: '/todo',
-        //data: taskToAdd
-    }).then(function(response){
-        console.log(response);
+        data: taskToAdd
+    // }).then(function(response){
+    //     //console.log(response);
+    //     getTodo()
+    // }).catch(function(err){
+    //     console.log('error in post', err);
+    //     alert ('unable to add task')
+    // })
+    }).then(function (response){
+        getTodo()
     }).catch(function(err){
-        console.log('error in post', err);
+        console.log('error in post', err)
         alert ('unable to add task')
     })
    
@@ -50,7 +57,7 @@ function renderTodo(todoArray){
     console.log('client post')
     $('#viewTodo').empty();
     
-    for (let i=0; i < todoArray.length; i++)
+    for (let i=0; i < todoArray.length; i++){
         if (todoArray[i].is_done===false){
             console.log('in false')
             $('#viewTodo').append(`
@@ -69,7 +76,7 @@ function renderTodo(todoArray){
                 <td>${todoArray[i].is_done},td>
                 <td><button id="deleteBtn">DELETE</td>
             </tr>
-            `)    
+            `) }   
         }
     } //end render to DOM
 
@@ -104,7 +111,7 @@ function deleteTask(){
         method: "DELETE",
         url: `/todo/${id}`
     }).then(function(response){
-        console.log('response',response)
+        //console.log('response',response)
         getTodo();
     }).catch(function(err) {
         console.log(err);
@@ -124,6 +131,7 @@ function getClickListeners(){
             is_done: false
         }    
         saveTask(taskToAdd);
+        getTodo();
     
     })
 

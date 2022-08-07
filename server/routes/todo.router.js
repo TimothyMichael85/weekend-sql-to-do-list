@@ -32,7 +32,7 @@ todoRouter.get('/', (req, res) => {
 todoRouter.post('/', (req, res) => {
     let queryText = `INSERT INTO "todo" ("task", "is_done")
     VALUES ($1, $2);`;
-    //let taskToAdd = (req.body) 
+    let taskToAdd = req.body
     console.log('router post', req.body)
 
     pool.query(
