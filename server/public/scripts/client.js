@@ -73,7 +73,7 @@ function renderTodo(todoArray){
             $('#viewTodo').append(`
             <tr data-id=${todoArray[i].id}>
                 <td>${todoArray[i].task}</td>
-                <td>${todoArray[i].is_done},td>
+                <td>${todoArray[i].is_done}</td>
                 <td><button id="deleteBtn">DELETE</td>
             </tr>
             `) }   
@@ -88,11 +88,11 @@ function completeTask(){
     console.log(id);
 
     $.ajax({
-        method: 'PUT',
+        method: "PUT",
         url: `/todo/${id}`,
-        // data:{
-        //     is_done: false
-        //}
+        data:{
+            is_done: false
+        }
     }).then(function (response){
         getTodo()
     }).catch(function (err){
@@ -139,6 +139,6 @@ function getClickListeners(){
      
      
      $('#viewTodo').on('click', '#deleteBtn', deleteTask);
-     $('#viewTodo').on('click', '#completeBtn', completeTask);
+     $('#viewTodo').on('click', '.completeBtn', completeTask);
 
 }//end Get Click Listeners
