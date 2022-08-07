@@ -30,12 +30,14 @@ todoRouter.get('/', (req, res) => {
 
 //POST
 todoRouter.post('/', (req, res) => {
-    let queryText = `INSERT INTO "todo" ("task", "is_complete)
+    let queryText = `INSERT INTO "todo" ("task", "is_complete")
     VALUES ($1, $2);`;
+    console.log('router post')
 
     pool.query(
         queryText,
-        [newTask.task, newTask.is_complete])
+        [taskToAdd.task, taskToAdd.is_complete])
+        console.log('is this thing on?')
         .then((response) => {
             console.log(response);
             res.sendStatus(200)
@@ -51,7 +53,7 @@ todoRouter.put('/:id', (req, res) => {
     
         let queryText = `
         UPDATE "todo"
-        SET "task_complete" = 'true' 
+        SET "is_done" = 'true' 
         WHERE "id" = $1;
         `;
         let queryValues = [id];
