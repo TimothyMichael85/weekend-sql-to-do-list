@@ -4,15 +4,116 @@ $(document).ready(function (){
     console.log('JQ');
     //click listeners
     getClickListeners();
-    //load existing to to items at page load
+    //load existing to do items at page load
     getTodo();
 
 });//end doc ready
 
-function getTodo(){
-    console.log('in getTodo');
-}
+function deleteTask(){
+    console.log('in deleteTask')
+    //ajax call to server to delete tasks
+    const id = $(this).closest('tr').data('id');
+    console.log(id);
+    $.ajax({
+        method: "DELETE",
+        url: `/todo/${id}`
+    }).then(function(response){
+        console.log('response',response)
+        getTodo();
+    }).catch(function(err) {
+        console.log(err);
+        alert('error in delete',err)
+    })
+} // end delete task
 
 function getClickListeners(){
     console.log('in getClickListeners');
+    $('#addBtn').on('click',function (){
+        console.log('click addBtn');
+    })
+
+    let taskToAdd = {
+        task: $('#todoIn').val(),
+
+    };
+    //call saveTask with new object
+     saveTask(taskToAdd);
+
+$('#viewTodo').on('click', '#deleteBtn', deleteTask) 
+
+$('#viewTodo').on('click', '#completeBtn', completeTask)
+}
+
+function completeTask(){
+    console.log('in updateTask');
+
+    const id = $(this).closest('tr').data('id');
+    console.log(id);
+
+    $.ajax({
+        method: 'PUT',
+        url: `/todo/${id}`
+    }).then(function (response){
+        getTodo()
+    }).catch(function (err){
+        console.log(err)
+        alert ('mark complete failed')
+    })
+};
+
+function getTodo(){
+    console.log('in getTodo');
+    //ajax call to server to get todo list
+    $.ajax({
+        method: 'GET',
+        url: '/todo'
+    }).then(function (response){
+    console.log(response)
+    renderTodo(response);
+    }).catch(function(err){
+        console.log(err);
+        alert('error in get to do')
+    })
+} //end get to do
+
+function renderTodo(todoArray){
+$('#viewTodo').empty();
+
+for (let i=0; i < todoArray.length; i++)
+    if (todoArray[i].is_done===false){
+        console.log('in false')
+        $('#viewTodo').append(`
+        <tr data-id=${todoArray[i].id}>
+            <td>${todoArray[i].task}</td>
+            <td>${todoArray[i].is_done},td>
+            <td><button class="completeBtn">COMPLETED</button></td>
+            <td><button id="deleteBtn">DELETE</td>
+        </tr>    
+        `)
+    } else {
+        console.log('in true', todoArray[i])
+        $('#viewTodo').append(`
+        <tr data-id=${todoArray[i].id}>
+            <td>${todoArray[i].task}</td>
+            <td>${todoArray[i].is_done},td>
+            <td><button id="deleteBtn">DELETE</td>
+        </tr>
+        `)    
+    }
+}
+
+function saveTask(newTask) {
+    console.log('in saveTask', newTask);
+
+    //ajax call to get tasks
+    $.ajax({
+        method: 'POST',
+        url: '/todo',
+        data: newTask
+    }).then(function(response){
+        console.log(response);
+    }).catch(function(err){
+        console.log('error in post', err);
+        alert ('unable to add task')
+    })
 }
